@@ -13,6 +13,15 @@ val brandAssets = tasks.register<Copy>("brandAssets") {
     into(layout.buildDirectory.dir("generated/brand"))
 }
 
+// LogicFlow ships one stylesheet that its canvas and widgets need, so the demo copies it in rather
+// than restating it. The page links it as `lf/index.css`.
+val logicFlowStyles = tasks.register<Copy>("logicFlowStyles") {
+    from(rootProject.layout.projectDirectory.dir("build/js/node_modules/@logicflow/core/dist")) {
+        include("index.css")
+        into("lf")
+    }
+    into(layout.buildDirectory.dir("generated/logic-flow"))
+}
 kotlin {
     js {
         useEsModules()
@@ -29,11 +38,12 @@ kotlin {
     sourceSets {
         jsMain {
             resources.srcDir(brandAssets)
+            resources.srcDir(logicFlowStyles)
         }
         jsMain.dependencies {
             implementation("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.1")
             // The published modules the demo demonstrates, one line each.
-            implementation(project(":ktjs-wrapper-template-core"))
+            implementation(project(":ktjs-logic-flow"))
         }
 
         jvmTest.dependencies {
@@ -51,6 +61,7 @@ kotlin {
 // reads that directory, so the edge belongs there.
 tasks.named("jsProcessResources") {
     dependsOn(brandAssets)
+    dependsOn(logicFlowStyles)
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -72,7 +83,7 @@ tasks.register<Test>("e2eTest") {
     dependsOn("jsBrowserDistribution")
     // The Chromium is installed for the Kotlin/JS browser tests of the wrapper module, and this suite
     // reuses it. A derived project points this at its own first published module.
-    dependsOn(":ktjs-wrapper-template-core:kotlinInstallPlaywrightBrowsers")
+    dependsOn(":ktjs-logic-flow:kotlinInstallPlaywrightBrowsers")
 
     testClassesDirs = jvmE2eCompilation.output.classesDirs
     classpath = files(jvmE2eCompilation.output.allOutputs, jvmE2eCompilation.runtimeDependencyFiles)

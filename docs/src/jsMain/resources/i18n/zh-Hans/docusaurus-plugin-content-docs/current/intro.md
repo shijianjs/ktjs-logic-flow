@@ -5,34 +5,26 @@ title: 简介
 
 # 简介
 
-`ktjs-wrapper-template` 是 Kotlin/JS wrapper 的起点，目标通常是 Web Component 生态的 npm 包。它刻意
-**不是**填占位符的脚手架：这个仓库本身就是一个完整项目——能构建、能在真实浏览器里跑测试、有自己的文档站、
-能部署到 GitHub Pages——所以复制一份就能在第一次 `./gradlew build` 跑起来。
+`ktjs-logic-flow` 是 [LogicFlow](https://github.com/didi/LogicFlow) 生态里 `@logicflow/core` 2.2.5 的 Kotlin/JS wrapper：上游
+`.d.ts` 里的每个类型和成员都落成可被编译器检查的 `external` 声明，不靠 `dynamic` 兜底。
 
-## 里面有什么
+封装覆盖 `@logicflow/core` 2.2 的 `LogicFlow` 类：构造函数与选项（`container`、`width`、`height`、`background`、`grid`、`keyboard`、`style`、`edgeType`、`history`、`snapline`、`partial`、`stopMoveGraph`、`isSilentMode`、`themeMode`、`plugins` 等）、节点编辑（`addNode`、`deleteNode`、`cloneNode`、`changeNodeId`、`changeNodeType`、一组 `getNode…` 查询）、连线编辑（`addEdge`、`deleteEdge`、`getEdgeDataById`、`getEdgeModelById`、`getNodeEdges`、`setDefaultEdgeType`）、元素操作（`addElements`、选中相关方法、`setProperties` / `getProperties` / `deleteProperty`、`updateAttributes`、`setElementZIndex`）、文本（`editText`、`updateText`）、编辑配置、主题、图操作（`render`、`renderRawData`、`getGraphData`、`getGraphRawData`、`clearData`）、历史与视口（`undo`、`redo`、`zoom`、`fitView`、`translate`、`getTransform` 等）、连线动画，以及事件总线。同时声明了数据类型（`NodeConfig`、`NodeData`、`EdgeConfig`、`EdgeData`、`GraphConfigData`、`GraphData`、`TextConfig`、`RegisterConfig`）与 `LogicFlowEvents` 事件名。
 
-| 部分 | 作用 |
-| --- | --- |
-| `ktjs-wrapper-template-core` | 示例模块：`@vaadin/button` 25.3.5。一个 npm 包、一个 Gradle 模块、一个 Kotlin 包；加下一个包时照它复制 |
-| `demo` | 用 wrapper 造两个 `<vaadin-button>` 的页面，发布在 `/demo/` |
-| `docs` | 本站：Kotlin 配置 + Markdown 页面，由 [ktjs-docusaurus](https://github.com/shijianjs/ktjs-docusaurus) 的 Gradle 插件构建 |
-| 其余 | 版本清单集中在一个 `package.json`、每模块独立的 `-kt.N` 修订号、Detekt、Playwright 浏览器测试、经 hub 发布到 Maven Central、Pages 工作流 |
+## 封装了哪些包
 
-`/api/` 下是发布模块的 Dokka 产物——和 `pagesSite` 组装本站时用的是同一次 Dokka。
+| 模块 | Gradle 坐标 | 上游 |
+| --- | --- | --- |
+| `ktjs-logic-flow` | `io.github.shijianjs:ktjs-logic-flow` | `@logicflow/core` 2.2.5 |
+
+一个 npm 包、一个 Gradle 模块、一个 Kotlin 包（`io.github.shijianjs.ktjs.logicflow`），选项、数据类型与事件名放在 `core` 子包。
+
+## 许可证
+
+wrapper 自身是 MIT。上游 `@logicflow/core` 的许可证与 wrapper 不同，商用前请读
+[许可证说明](guide/license.md)。
 
 ## 接下来
 
-- [快速开始](guide/getting-started.md)：构建、测试、开发服务器。
-- [派生新项目](guide/deriving-a-project.md)：改名的清单。
-
-## 各部分如何协作
-
-```mermaid
-flowchart TB
-  T["ktjs-wrapper-template<br/>（复制我）"] --> C["core：示例 wrapper"]
-  T --> D["demo：可运行的页面"]
-  T --> G["docs：本站"]
-  C --> V["@vaadin/button"]
-  G --> B["ktjs-docusaurus<br/>Gradle 插件"]
-  B --> P["GitHub Pages"]
-```
+- [快速开始](guide/getting-started.md) — 加依赖、写第一个调用、跑构建。
+- [API 概览](guide/api-overview.md) — 包结构、类型映射约定、常用写法。
+- [演示页](guide/demo.md) — 浏览器里直接看效果。
