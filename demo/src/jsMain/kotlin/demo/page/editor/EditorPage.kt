@@ -1,14 +1,16 @@
 package demo.page.editor
 
+import io.github.shijianjs.ktjs.demo.page.DemoPage
+import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
+import web.components.CustomElementReference
+import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.nav.Page
 import io.github.shijianjs.ktjs.demo.page.exampleBox
 import io.github.shijianjs.ktjs.demo.page.grid
-import io.github.shijianjs.ktjs.demo.page.newPage
 import io.github.shijianjs.ktjs.demo.page.sectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
@@ -114,8 +116,7 @@ private val ACTIONS: List<Action> = listOf(
  * but the canvas lives in this page's shadow tree and document styles do not cross that boundary,
  * so the page re-hosts the sheet through [io.github.shijianjs.ktjs.demo.page.DemoPage.addLinkedSheet].
  */
-internal class EditorPage : Page {
-    private val page = newPage()
+internal class EditorPage : DemoPage() {
 
     private val texts = Binder(editorTexts)
 
@@ -150,10 +151,9 @@ internal class EditorPage : Page {
         createButton { setAttribute("data-action", action.id) }
     }
 
-    override val node get() = page
 
     init {
-        page.addLinkedSheet("lf/index.css")
+        addLinkedSheet("lf/index.css")
 
         val section = sectionBlock()
         texts.bind(section.title, { it.canvasHeading })
@@ -168,7 +168,7 @@ internal class EditorPage : Page {
         texts.bind(output.title, { it.jsonHeading })
         output.body.append(exampleBox(null, json))
 
-        page.body.append(section.root, output.root)
+        body.append(section.root, output.root)
         json.textContent = current.emptyJson
 
         buttons.forEachIndexed { index, button ->
@@ -255,14 +255,22 @@ internal class EditorPage : Page {
 
     override fun applyTranslation(lang: Lang) {
         current = editorTexts[lang]
-        page.setTitle(current.title)
-        page.setSummary(current.summary)
+        setTitle(current.title)
+        setSummary(current.summary)
         texts.apply(lang)
         buttons.forEachIndexed { index, button ->
             button.textContent = current.labels.getOrElse(index) { "" }
         }
         json.textContent = current.emptyJson
         editor?.let { refresh(it) }
+    }
+
+    companion object : CustomElementReference<EditorPage>(EditorPage::class.js) {
+        val NAME: TagName<EditorPage> = TagName("logic-flow-editor-page")
+
+        fun define() {
+            defineIfMissing(NAME, this)
+        }
     }
 }
 
@@ -323,4 +331,10 @@ private fun sample(texts: EditorTexts) = graphConfigData {
             targetNodeId = "n4"
         },
     )
+}
+
+/** Creates a defined `<logic-flow-editor-page>`. */
+internal fun newEditorPage(): EditorPage {
+    EditorPage.define()
+    return EditorPage.NAME()
 }
