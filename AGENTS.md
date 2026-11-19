@@ -597,3 +597,29 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 - 优先就地修改或扩展现有小节，不要为同一主题新开重复小节。
 - 从模板升级派生项目时仍从模板仓库 `git diff` 取变更后人工 cherry-pick，不要用派生项目的其他文件
   反向覆盖模板。
+
+## 演示页：桥到 `ktjs-demo-kit`
+
+演示页不再自己写外壳：`index.html` 只声明一个 `<ktjs-demo-layout id="demo">`，`Main.kt` 只做
+`DemoLayout.define()` + `layout.mount(LayoutConfig(...))`；导航、语言切换、主题、面包屑、链接菜单都由
+`ktjs-demo-kit` 提供。`demo` 自己的 `I18n.kt` 与 `demo.css` 已删掉。
+
+- `SiteMenu`：条目即页面；`SiteTexts`：每语言一个对象，页面自己的文案各自一个 `Translations<T>` + `Binder`。
+- 页面里不要手搓卡片/行/网格：`exampleBox`（Vaadin 卡片）、`row` / `col`、`grid`、`sectionBlock` 在 kit 里。
+  画布只留一个 `minHeight`，边框与内边距由卡片给。
+
+### LogicFlow 自带的 CSS 必须重挂进 shadow 树
+
+`index.html` 链接 `lf/index.css`（`logicFlowStyles` 任务从 `@logicflow/core/dist` 拷进 resources），
+但画布在这个页面的 shadow 树里，document 的样式**进不了 shadow**：节点没有描边、网格不出现，
+而且**不报任何错误**。页面用 `DemoPage.addLinkedSheet("lf/index.css")` 读链接表的 CSS 规则文本、
+重新填进一份 `CSSStyleSheet` 交给页面 adopt，样式就位。
+
+同一招适用后面几个「自带 CSS」的库（gridstack / fullcalendar / aggrid / vtable）。判断顺序：
+先看手里有没有现成封装，没有就用 `addLinkedSheet`，不要去抄它的 CSS 片段。
+
+### 编辑器要等宿主挂载，且语言切换不重建
+
+`createLogicFlow` 要量容器尺寸，页面初始化时节点还没进文档，所以用 `requestAnimationFrame` 轮询
+`isConnected` 再建（页面没有挂载钩子）。切语言只重设按钮文案、重读图（`refresh`），节点与连线都还在，
+样例图的节点文字按当前语言取，不会整页重建。
