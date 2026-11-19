@@ -18,6 +18,20 @@ title: 简介
 
 一个 npm 包、一个 Gradle 模块、一个 Kotlin 包（`io.github.shijianjs.ktjs.logicflow`），选项、数据类型与事件名放在 `core` 子包。
 
+```mermaid
+flowchart TB
+  LF["new LogicFlow(options)<br/>container / grid / history / edgeType 等"] --> NODE["节点<br/>addNode、deleteNode、changeNodeType"]
+  LF --> EDGE["连线<br/>addEdge、getNodeEdges、setDefaultEdgeType"]
+  LF --> SEL["元素<br/>addElements、选择、setProperties"]
+  LF --> HIS["历史 + 视口<br/>undo、redo、zoom、fitView、translate"]
+  LF --> EV["事件总线<br/>LogicFlowEvents"]
+  NODE --> GD["图数据<br/>NodeData / EdgeData / GraphData"]
+  EDGE --> GD
+  GD --> K["io.github.shijianjs.ktjs.logicflow<br/>（含 core 子包）"]
+```
+
+页面做的事都经同一个 `LogicFlow` 实例：图由库自己渲染，wrapper 只决定你被允许向它问什么。
+
 ## 许可证
 
 wrapper 自身是 MIT。上游 `@logicflow/core` 的许可证与 wrapper 不同，商用前请读

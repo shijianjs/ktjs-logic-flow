@@ -15,6 +15,16 @@ view** move the viewport, and **Export JSON** prints `getGraphRawData` into the 
 status line reports the node and edge counts plus the current scale, and the language switch rewrites
 every label.
 
+```mermaid
+flowchart LR
+  ADD["Add node"] -->|"addNode"| LF["LogicFlow instance<br/>(four-node sample flow)"]
+  DEL["Delete selected"] -->|"getSelectElements → deleteNode / deleteEdge"| LF
+  UNDO["Undo / Redo"] -->|"history"| LF
+  VIEW["Zoom in / out, Fit view"] -->|"viewport"| LF
+  LF -->|"node / edge count, scale"| ST["status line"]
+  LF -->|"getGraphRawData"| EXP["Export JSON panel"]
+```
+
 
 The language button in the page header switches between English and Simplified Chinese: every
 visible string changes, not just the title.

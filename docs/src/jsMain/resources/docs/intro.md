@@ -19,6 +19,21 @@ The wrapper covers the `LogicFlow` class of `@logicflow/core` 2.2: the construct
 
 One npm package, one Gradle module, one Kotlin package (`io.github.shijianjs.ktjs.logicflow`) with a `core` sub-package for the options, the data types and the event names.
 
+```mermaid
+flowchart TB
+  LF["new LogicFlow(options)<br/>container / grid / history / edgeType …"] --> NODE["nodes<br/>addNode, deleteNode, changeNodeType"]
+  LF --> EDGE["edges<br/>addEdge, getNodeEdges, setDefaultEdgeType"]
+  LF --> SEL["elements<br/>addElements, selection, setProperties"]
+  LF --> HIS["history + viewport<br/>undo, redo, zoom, fitView, translate"]
+  LF --> EV["event bus<br/>LogicFlowEvents"]
+  NODE --> GD["graph data<br/>NodeData / EdgeData / GraphData"]
+  EDGE --> GD
+  GD --> K["io.github.shijianjs.ktjs.logicflow<br/>(+ core sub-package)"]
+```
+
+Everything a page does goes through one `LogicFlow` instance: the graph is the library's own
+rendering, and the wrapper only decides what you are allowed to ask it.
+
 ## License
 
 The wrapper itself is MIT. The upstream `@logicflow/core` license differs from it — read the

@@ -13,6 +13,16 @@ title: 演示页
 **导出 JSON** 把 `getGraphRawData` 打印到下方面板。状态行显示节点与连线数量以及当前缩放，语言开关会
 改写每个标签。
 
+```mermaid
+flowchart LR
+  ADD["新增节点"] -->|"addNode"| LF["LogicFlow 实例<br/>（四节点样例流程）"]
+  DEL["删除选中"] -->|"getSelectElements → deleteNode / deleteEdge"| LF
+  UNDO["撤销 / 重做"] -->|"历史栈"| LF
+  VIEW["放大 / 缩小 / 自适应"] -->|"视口"| LF
+  LF -->|"节点数、连线数、缩放"| ST["状态行"]
+  LF -->|"getGraphRawData"| EXP["导出 JSON 面板"]
+```
+
 页面右上角的语言按钮在英文与简体中文之间切换，切换的是页面上全部可见文案（不只是页面标题）。
 
 API 文档在 [https://shijianjs.github.io/ktjs-logic-flow/api/](https://shijianjs.github.io/ktjs-logic-flow/api/)，由 Dokka 从已发布模块生成。
