@@ -1,19 +1,17 @@
 package demo.page.editor
 
 import io.github.shijianjs.ktjs.demo.page.DemoPage
-import io.github.shijianjs.ktjs.dom.webcomponent.defineIfMissing
-import web.components.CustomElementReference
-import web.dom.TagName
 import io.github.shijianjs.ktjs.demo.i18n.Binder
 import io.github.shijianjs.ktjs.demo.i18n.Lang
 import io.github.shijianjs.ktjs.demo.i18n.Langs
 import io.github.shijianjs.ktjs.demo.i18n.Translations
 import io.github.shijianjs.ktjs.demo.i18n.texts
-import io.github.shijianjs.ktjs.demo.page.exampleBox
-import io.github.shijianjs.ktjs.demo.page.grid
-import io.github.shijianjs.ktjs.demo.page.sectionBlock
+import io.github.shijianjs.ktjs.demo.page.Blocks.exampleBox
+import io.github.shijianjs.ktjs.demo.page.Grid
+import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
+import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.logicflow.LogicFlow
 import io.github.shijianjs.ktjs.logicflow.createLogicFlow
 import io.github.shijianjs.ktjs.logicflow.core.LogicFlowEvents
@@ -155,16 +153,16 @@ internal class EditorPage : DemoPage() {
     init {
         addLinkedSheet("lf/index.css")
 
-        val section = sectionBlock()
+        val section = SectionBlock.NAME { show() }
         texts.bind(section.heading, { it.canvasHeading })
         texts.bind(section.hint, { it.hint })
         section.body.append(
-            grid(minColumnWidth = 150, *buttons.toTypedArray()),
+            Grid.NAME { show(150); add(*buttons.toTypedArray()) },
             status,
             exampleBox(null, canvas),
         )
 
-        val output = sectionBlock()
+        val output = SectionBlock.NAME { show() }
         texts.bind(output.heading, { it.jsonHeading })
         output.body.append(exampleBox(null, json))
 
@@ -265,13 +263,7 @@ internal class EditorPage : DemoPage() {
         editor?.let { refresh(it) }
     }
 
-    companion object : CustomElementReference<EditorPage>(EditorPage::class.js) {
-        val NAME: TagName<EditorPage> = TagName("logic-flow-editor-page")
-
-        fun define() {
-            defineIfMissing(NAME, this)
-        }
-    }
+    companion object : CustomElementReferenceAdapter<EditorPage>(EditorPage::class.js, "logic-flow-editor-page")
 }
 
 /** `JSON.stringify(value, null, 2)`: the standard formatter, so the panel shows the graph as JSON. */
@@ -331,10 +323,4 @@ private fun sample(texts: EditorTexts) = graphConfigData {
             targetNodeId = "n4"
         },
     )
-}
-
-/** Creates a defined `<logic-flow-editor-page>`. */
-internal fun newEditorPage(): EditorPage {
-    EditorPage.define()
-    return EditorPage.NAME()
 }

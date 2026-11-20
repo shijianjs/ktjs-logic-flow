@@ -1,10 +1,11 @@
 package demo
 
-import demo.page.editor.newEditorPage
-import demo.page.overview.newOverviewPage
+import demo.page.editor.EditorPage
+import demo.page.overview.OverviewPage
 import io.github.shijianjs.ktjs.demo.nav.DemoMenu
 import io.github.shijianjs.ktjs.demo.nav.Entry
 import io.github.shijianjs.ktjs.demo.nav.Group
+import io.github.shijianjs.ktjs.dom.element.invoke
 
 /** The LogicFlow version this demo is built against; the navbar shows it under the site name. */
 const val SITE_VERSION: String = "2.2.5"
@@ -28,7 +29,7 @@ internal val EXAMPLES: Group = Group("examples", "lucide:play")
  */
 fun siteMenu(): DemoMenu = DemoMenu(
     listOf(
-        Entry("overview", START, "lucide:sparkles") { newOverviewPage() },
-        Entry("editor", EXAMPLES, "lucide:workflow") { newEditorPage() },
+        Entry("overview", START, "lucide:sparkles") { OverviewPage.NAME() },
+        Entry("editor", EXAMPLES, "lucide:workflow") { EditorPage.NAME() },
     ),
 )
