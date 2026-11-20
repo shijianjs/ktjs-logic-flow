@@ -601,7 +601,7 @@ klibs.io 从 Maven Central 与 GitHub 自动抓取，无需提交元数据文件
 ## 演示页：桥到 `ktjs-demo-kit`
 
 演示页不再自己写外壳：`index.html` 只声明一个 `<ktjs-demo-layout id="demo">`，`Main.kt` 只做
-`DemoLayout.define()` + `layout.mount(LayoutConfig(...))`；导航、语言切换、主题、面包屑、链接菜单都由
+`DemoLayout.NAME`（读一次标签名就注册并升级页面上那个元素）+ `layout.mount(LayoutConfig(...))`；导航、语言切换、主题、面包屑、链接菜单都由
 `ktjs-demo-kit` 提供。`demo` 自己的 `I18n.kt` 与 `demo.css` 已删掉。
 
 - `SiteMenu`：条目即页面；`SiteTexts`：每语言一个对象，页面自己的文案各自一个 `Translations<T>` + `Binder`。
