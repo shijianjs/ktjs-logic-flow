@@ -156,7 +156,7 @@ internal class EditorPage : DemoPage() {
         addLinkedSheet("lf/index.css")
 
         val section = sectionBlock()
-        texts.bind(section.title, { it.canvasHeading })
+        texts.bind(section.heading, { it.canvasHeading })
         texts.bind(section.hint, { it.hint })
         section.body.append(
             grid(minColumnWidth = 150, *buttons.toTypedArray()),
@@ -165,7 +165,7 @@ internal class EditorPage : DemoPage() {
         )
 
         val output = sectionBlock()
-        texts.bind(output.title, { it.jsonHeading })
+        texts.bind(output.heading, { it.jsonHeading })
         output.body.append(exampleBox(null, json))
 
         body.append(section.root, output.root)

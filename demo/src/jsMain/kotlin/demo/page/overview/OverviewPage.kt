@@ -105,21 +105,21 @@ internal class OverviewPage : DemoPage() {
         addLink(texts.bind(anchor("", SOURCE_URL, external = true), { it.sourceLink }))
 
         val purpose = sectionBlock()
-        texts.bind(purpose.title, { it.purposeHeading })
+        texts.bind(purpose.heading, { it.purposeHeading })
         val bullets = HtmlTagName.ul {
             List(3) { index -> texts.bind(+HtmlTagName.li()) { it.bullets.getOrNull(index).orEmpty() } }
         }
         purpose.body.append(texts.bind(paragraph(), { it.body }), bullets)
 
         val data = sectionBlock()
-        texts.bind(data.title, { it.dataHeading })
+        texts.bind(data.heading, { it.dataHeading })
         data.body.append(
             texts.bind(paragraph(), { it.dataBody }),
             row(codeText("graphConfigData { nodes = arrayOf(nodeConfig { … }); edges = arrayOf(edgeConfig { … }) }")),
         )
 
         val next = sectionBlock()
-        texts.bind(next.title, { it.nextHeading })
+        texts.bind(next.heading, { it.nextHeading })
         next.body.append(texts.bind(paragraph(), { it.nextBody }))
 
         body.append(purpose.root, data.root, next.root)
