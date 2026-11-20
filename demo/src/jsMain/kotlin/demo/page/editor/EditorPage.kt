@@ -34,55 +34,6 @@ import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
 
-private val editorEnglish: EditorTexts = EditorTexts(
-    title = "Editor",
-    summary = "The real LogicFlow engine with typed options and typed graph data: drag the nodes " +
-        "around, connect them from an anchor, then export the graph as JSON.",
-    canvasHeading = "Canvas",
-    jsonHeading = "The graph as JSON",
-    hint = "Every interaction goes through the wrapper: `createLogicFlow`, `render`, `addNode`, " +
-        "`deleteNode`, `zoom`, `fitView` and the `LogicFlowEvents` constants.",
-    emptyJson = "Export the graph and its JSON shows up here.",
-    labels = listOf("Add node", "Delete selected", "Undo", "Redo", "Zoom in", "Zoom out", "Fit view", "Export JSON"),
-    counts = "Nodes / edges",
-    zoom = "Zoom",
-    lastEvent = "Last event",
-    noEvent = "none yet",
-    sampleTexts = listOf("Order received", "Check stock", "In stock?", "Done"),
-)
-
-private val editorChinese: EditorTexts = EditorTexts(
-    title = "编辑器",
-    summary = "真实 LogicFlow 引擎，选项与图数据都有类型：拖动节点、从锚点连出线，最后把图导出成 JSON。",
-    canvasHeading = "画布",
-    jsonHeading = "图数据的 JSON",
-    hint = "页面上的操作全走封装：`createLogicFlow`、`render`、`addNode`、`deleteNode`、`zoom`、" +
-        "`fitView`，以及 `LogicFlowEvents` 常量。",
-    emptyJson = "导出后，图数据的 JSON 会显示在这里。",
-    labels = listOf("新增节点", "删除选中", "撤销", "重做", "放大", "缩小", "自适应", "导出 JSON"),
-    counts = "节点 / 连线",
-    zoom = "缩放",
-    lastEvent = "最近事件",
-    noEvent = "暂无",
-    sampleTexts = listOf("收到订单", "检查库存", "有库存吗", "完成"),
-)
-
-private val editorTexts: Translations<EditorTexts> = texts(
-    Langs.EN to editorEnglish,
-    Langs.ZH_HANS to editorChinese,
-)
-
-private val ACTIONS: List<Action> = listOf(
-    Action("add") { page, editor -> page.addNode(editor) },
-    Action("delete") { page, editor -> page.deleteSelected(editor) },
-    Action("undo") { page, editor -> editor.undo(); page.refresh(editor) },
-    Action("redo") { page, editor -> editor.redo(); page.refresh(editor) },
-    Action("zoomIn") { page, editor -> editor.zoom(true); page.refresh(editor) },
-    Action("zoomOut") { page, editor -> editor.zoom(false); page.refresh(editor) },
-    Action("fit") { page, editor -> editor.fitView(); page.refresh(editor) },
-    Action("export") { page, editor -> page.exportJson(editor) },
-)
-
 /**
  * The editor page: a toolbar, the canvas, the document read back as HTML — here, the graph as JSON.
  *
@@ -238,64 +189,107 @@ internal class EditorPage : DemoPage() {
         editor?.let { refresh(it) }
     }
 
-    companion object : CustomElementReferenceAdapter<EditorPage>(EditorPage::class.js, "logic-flow-editor-page")
-}
-
-/** `JSON.stringify(value, null, 2)`: the standard formatter, so the panel shows the graph as JSON. */
-private val stringifyJson: (JsAny) -> String = js("(value) => JSON.stringify(value, null, 2)")
-
-private fun stringify(value: JsAny): String = stringifyJson(value)
-
-/** The sample graph: a four-node order flow, labelled in the language the page is showing. */
-private fun sample(texts: EditorTexts) = graphConfigData {
-    nodes = arrayOf(
-        nodeConfig {
-            id = "n1"
-            type = "rect"
-            x = 180.0
-            y = 120.0
-            text = texts.sampleTexts[0]
-        },
-        nodeConfig {
-            id = "n2"
-            type = "rect"
-            x = 420.0
-            y = 120.0
-            text = texts.sampleTexts[1]
-        },
-        nodeConfig {
-            id = "n3"
-            type = "diamond"
-            x = 420.0
-            y = 260.0
-            text = texts.sampleTexts[2]
-        },
-        nodeConfig {
-            id = "n4"
-            type = "circle"
-            x = 420.0
-            y = 380.0
-            text = texts.sampleTexts[3]
-        },
-    )
-    edges = arrayOf(
-        edgeConfig {
-            id = "e1"
-            type = "polyline"
-            sourceNodeId = "n1"
-            targetNodeId = "n2"
-        },
-        edgeConfig {
-            id = "e2"
-            type = "polyline"
-            sourceNodeId = "n2"
-            targetNodeId = "n3"
-        },
-        edgeConfig {
-            id = "e3"
-            type = "polyline"
-            sourceNodeId = "n3"
-            targetNodeId = "n4"
-        },
-    )
+    companion object : CustomElementReferenceAdapter<EditorPage>(EditorPage::class.js, "logic-flow-editor-page") {
+        private val editorEnglish: EditorTexts = EditorTexts(
+            title = "Editor",
+            summary = "The real LogicFlow engine with typed options and typed graph data: drag the nodes " +
+                "around, connect them from an anchor, then export the graph as JSON.",
+            canvasHeading = "Canvas",
+            jsonHeading = "The graph as JSON",
+            hint = "Every interaction goes through the wrapper: `createLogicFlow`, `render`, `addNode`, " +
+                "`deleteNode`, `zoom`, `fitView` and the `LogicFlowEvents` constants.",
+            emptyJson = "Export the graph and its JSON shows up here.",
+            labels = listOf("Add node", "Delete selected", "Undo", "Redo", "Zoom in", "Zoom out", "Fit view", "Export JSON"),
+            counts = "Nodes / edges",
+            zoom = "Zoom",
+            lastEvent = "Last event",
+            noEvent = "none yet",
+            sampleTexts = listOf("Order received", "Check stock", "In stock?", "Done"),
+        )
+        private val editorChinese: EditorTexts = EditorTexts(
+            title = "编辑器",
+            summary = "真实 LogicFlow 引擎，选项与图数据都有类型：拖动节点、从锚点连出线，最后把图导出成 JSON。",
+            canvasHeading = "画布",
+            jsonHeading = "图数据的 JSON",
+            hint = "页面上的操作全走封装：`createLogicFlow`、`render`、`addNode`、`deleteNode`、`zoom`、" +
+                "`fitView`，以及 `LogicFlowEvents` 常量。",
+            emptyJson = "导出后，图数据的 JSON 会显示在这里。",
+            labels = listOf("新增节点", "删除选中", "撤销", "重做", "放大", "缩小", "自适应", "导出 JSON"),
+            counts = "节点 / 连线",
+            zoom = "缩放",
+            lastEvent = "最近事件",
+            noEvent = "暂无",
+            sampleTexts = listOf("收到订单", "检查库存", "有库存吗", "完成"),
+        )
+        private val editorTexts: Translations<EditorTexts> = texts(
+            Langs.EN to editorEnglish,
+            Langs.ZH_HANS to editorChinese,
+        )
+        private val ACTIONS: List<Action> = listOf(
+            Action("add") { page, editor -> page.addNode(editor) },
+            Action("delete") { page, editor -> page.deleteSelected(editor) },
+            Action("undo") { page, editor -> editor.undo(); page.refresh(editor) },
+            Action("redo") { page, editor -> editor.redo(); page.refresh(editor) },
+            Action("zoomIn") { page, editor -> editor.zoom(true); page.refresh(editor) },
+            Action("zoomOut") { page, editor -> editor.zoom(false); page.refresh(editor) },
+            Action("fit") { page, editor -> editor.fitView(); page.refresh(editor) },
+            Action("export") { page, editor -> page.exportJson(editor) },
+        )
+        /** `JSON.stringify(value, null, 2)`: the standard formatter, so the panel shows the graph as JSON. */
+        private val stringifyJson: (JsAny) -> String = js("(value) => JSON.stringify(value, null, 2)")
+        private fun stringify(value: JsAny): String = stringifyJson(value)
+        /** The sample graph: a four-node order flow, labelled in the language the page is showing. */
+        private fun sample(texts: EditorTexts) = graphConfigData {
+            nodes = arrayOf(
+                nodeConfig {
+                    id = "n1"
+                    type = "rect"
+                    x = 180.0
+                    y = 120.0
+                    text = texts.sampleTexts[0]
+                },
+                nodeConfig {
+                    id = "n2"
+                    type = "rect"
+                    x = 420.0
+                    y = 120.0
+                    text = texts.sampleTexts[1]
+                },
+                nodeConfig {
+                    id = "n3"
+                    type = "diamond"
+                    x = 420.0
+                    y = 260.0
+                    text = texts.sampleTexts[2]
+                },
+                nodeConfig {
+                    id = "n4"
+                    type = "circle"
+                    x = 420.0
+                    y = 380.0
+                    text = texts.sampleTexts[3]
+                },
+            )
+            edges = arrayOf(
+                edgeConfig {
+                    id = "e1"
+                    type = "polyline"
+                    sourceNodeId = "n1"
+                    targetNodeId = "n2"
+                },
+                edgeConfig {
+                    id = "e2"
+                    type = "polyline"
+                    sourceNodeId = "n2"
+                    targetNodeId = "n3"
+                },
+                edgeConfig {
+                    id = "e3"
+                    type = "polyline"
+                    sourceNodeId = "n3"
+                    targetNodeId = "n4"
+                },
+            )
+        }
+    }
 }
