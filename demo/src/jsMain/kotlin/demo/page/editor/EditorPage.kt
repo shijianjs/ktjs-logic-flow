@@ -26,7 +26,6 @@ import io.github.shijianjs.ktjs.vaadin.button.createButton
 import kotlin.js.JsAny
 import web.animations.requestAnimationFrame
 import web.cssom.FontFamily
-import web.cssom.FontSize
 import web.cssom.Margin
 import web.cssom.WhiteSpace
 import web.cssom.px
@@ -34,26 +33,6 @@ import web.dom.clickEvent
 import web.events.addHandler
 import web.html.HTMLElement
 import web.html.HtmlTagName
-
-/** Every string this page shows, in one language. */
-private class EditorTexts(
-    val title: String,
-    val summary: String,
-    val canvasHeading: String,
-    val jsonHeading: String,
-    val hint: String,
-    val emptyJson: String,
-    /** The action labels, in the order of [ACTIONS]. */
-    val labels: List<String>,
-    /** The status line's two nouns: `Nodes / edges: 4 / 3 · Zoom: 100%`. */
-    val counts: String,
-    val zoom: String,
-    /** The event readout's two parts: the label and the "nothing happened yet" text. */
-    val lastEvent: String,
-    val noEvent: String,
-    /** The node texts of the sample graph. */
-    val sampleTexts: List<String>,
-)
 
 private val editorEnglish: EditorTexts = EditorTexts(
     title = "Editor",
@@ -92,9 +71,6 @@ private val editorTexts: Translations<EditorTexts> = texts(
     Langs.EN to editorEnglish,
     Langs.ZH_HANS to editorChinese,
 )
-
-/** One toolbar button: the command it runs on the editor. */
-private class Action(val id: String, val run: (EditorPage, LogicFlow) -> Unit)
 
 private val ACTIONS: List<Action> = listOf(
     Action("add") { page, editor -> page.addNode(editor) },
@@ -148,7 +124,6 @@ internal class EditorPage : DemoPage() {
     private val buttons: List<ButtonElement> = ACTIONS.map { action ->
         createButton { setAttribute("data-action", action.id) }
     }
-
 
     init {
         addLinkedSheet("lf/index.css")
