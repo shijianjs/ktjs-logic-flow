@@ -12,6 +12,15 @@ title: API 概览
 | `io.github.shijianjs.ktjs.logicflow` | `LogicFlow`、`createLogicFlow`、`logicFlowOf`、`logicFlowModel`、`LogicFlowModule` |
 | `…logicflow.core` | `LogicFlowOptions`、`logicFlowOptions`、`LogicFlowBackground`、`BackgroundConfig`、`LogicFlowGrid`、`GridConfig`、`LogicFlowMoveLock`、`LogicFlowKeyboard`、`LogicFlowAnimation`、`EditConfig`、`TransformData`、`GraphConfigData`、`GraphData`、`NodeConfig`、`NodeData`、`EdgeConfig`、`EdgeData`、`TextConfig`、`Position`、`RegisterConfig`、`LogicFlowEvent`、`LogicFlowEvents` |
 
+```mermaid
+flowchart LR
+    CJS["@logicflow/core：CommonJS<br/>同时有 exports.default 与 exports.LogicFlow"] --> NS["外部对象，按名字取 LogicFlow 类"]
+    EXT["@logicflow/extension 的插件<br/>本仓库不封装"] --> PLG["plugins / pluginsOptions：JsAny"]
+    NS --> INIT["createLogicFlow(logicFlowOptions { container; grid; … })"]
+    PLG --> INIT
+    INIT --> LF["LogicFlow 实例：render / on / getNodeModelById"]
+```
+
 ## 本 wrapper 的约定
 
 - **模块当命名空间用，类按名字取。** `@logicflow/core` 是 CommonJS，同时有 `exports.default` 与

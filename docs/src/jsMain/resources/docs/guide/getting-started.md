@@ -48,6 +48,14 @@ The plugins themselves (`@logicflow/extension`) are not part of this repository,
 `pluginsOptions` are declared as `JsAny`: pass the constructor or definition you imported from
 the extension package, unchanged.
 
+```mermaid
+flowchart LR
+    CSS["@logicflow/core/dist/index.css"] --> LF
+    OPT["logicFlowOptions { container = host<br/>grid = LogicFlowGrid(true); history = true }"] --> LF["createLogicFlow"]
+    LF --> EV["on(LogicFlowEvents.NodeAdd)"]
+    LF --> RD["render(graphConfigData { nodes; edges })"]
+```
+
 ## First call
 
 ```kotlin

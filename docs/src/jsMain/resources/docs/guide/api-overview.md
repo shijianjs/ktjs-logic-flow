@@ -12,6 +12,15 @@ title: API overview
 | `io.github.shijianjs.ktjs.logicflow` | `LogicFlow`, `createLogicFlow`, `logicFlowOf`, `logicFlowModel`, `LogicFlowModule` |
 | `…logicflow.core` | `LogicFlowOptions`, `logicFlowOptions`, `LogicFlowBackground`, `BackgroundConfig`, `LogicFlowGrid`, `GridConfig`, `LogicFlowMoveLock`, `LogicFlowKeyboard`, `LogicFlowAnimation`, `EditConfig`, `TransformData`, `GraphConfigData`, `GraphData`, `NodeConfig`, `NodeData`, `EdgeConfig`, `EdgeData`, `TextConfig`, `Position`, `RegisterConfig`, `LogicFlowEvent`, `LogicFlowEvents` |
 
+```mermaid
+flowchart LR
+    CJS["@logicflow/core: CommonJS<br/>with both exports.default and exports.LogicFlow"] --> NS["the external object, reading LogicFlow by name"]
+    EXT["plugins from @logicflow/extension<br/>not wrapped here"] --> PLG["plugins / pluginsOptions: JsAny"]
+    NS --> INIT["createLogicFlow(logicFlowOptions { container; grid; … })"]
+    PLG --> INIT
+    INIT --> LF["a LogicFlow instance: render / on / getNodeModelById"]
+```
+
 ## Conventions this wrapper follows
 
 - **The module is a namespace, the class taken by name.** `@logicflow/core` is CommonJS with both

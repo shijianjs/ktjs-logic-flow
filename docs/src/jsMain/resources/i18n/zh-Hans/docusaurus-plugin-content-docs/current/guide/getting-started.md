@@ -46,6 +46,14 @@ import io.github.shijianjs.ktjs.logicflow.createLogicFlow
 插件本身（`@logicflow/extension`）不在本仓库范围内，因此 `plugins` 与 `pluginsOptions` 声明为
 `JsAny`：把从扩展包里导入的构造函数或定义原样传进来即可。
 
+```mermaid
+flowchart LR
+    CSS["@logicflow/core/dist/index.css"] --> LF
+    OPT["logicFlowOptions { container = host<br/>grid = LogicFlowGrid(true); history = true }"] --> LF["createLogicFlow"]
+    LF --> EV["on(LogicFlowEvents.NodeAdd)"]
+    LF --> RD["render(graphConfigData { nodes; edges })"]
+```
+
 ## 第一个调用
 
 ```kotlin
