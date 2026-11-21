@@ -23,7 +23,7 @@ class DemoPageTest {
 
         assertTrue(page.title().contains("ktjs-logic-flow"), "title: ${page.title()}")
         assertTrue(page.locator("img.layout__logo").isVisible(), "the shell shows the project logo")
-        assertEquals("Overview", page.locator("ktjs-demo-page h1").textContent())
+        assertEquals("Overview", page.locator("logic-flow-overview-page h1").textContent())
         assertTrue(
             page.locator("vaadin-side-nav-item[data-route='editor']").isVisible(),
             "the sidebar lists the editor route",
