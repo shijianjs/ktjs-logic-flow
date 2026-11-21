@@ -11,7 +11,6 @@ import io.github.shijianjs.ktjs.demo.page.Grid
 import io.github.shijianjs.ktjs.demo.page.SectionBlock
 import io.github.shijianjs.ktjs.dom.element.inlineStyle
 import io.github.shijianjs.ktjs.dom.element.invoke
-import io.github.shijianjs.ktjs.dom.webcomponent.CustomElementReferenceAdapter
 import io.github.shijianjs.ktjs.logicflow.LogicFlow
 import io.github.shijianjs.ktjs.logicflow.createLogicFlow
 import io.github.shijianjs.ktjs.logicflow.core.LogicFlowEvents
@@ -189,7 +188,7 @@ internal class EditorPage : DemoPage() {
         editor?.let { refresh(it) }
     }
 
-    companion object : CustomElementReferenceAdapter<EditorPage>(EditorPage::class.js, "logic-flow-editor-page") {
+    companion object : EditorPageDefaultReference() {
         private val editorEnglish: EditorTexts = EditorTexts(
             title = "Editor",
             summary = "The real LogicFlow engine with typed options and typed graph data: drag the nodes " +
