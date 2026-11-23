@@ -56,7 +56,7 @@ kotlin {
             api("org.jetbrains.kotlin-wrappers:kotlin-browser:2026.11.2")
             // The wrapper's public surface carries `JsAny` (event payloads and custom properties), so
             // the bridge type is part of what a consumer compiles against.
-            api("org.jetbrains.kotlin-wrappers:kotlin-js:2026.11.1")
+            api("org.jetbrains.kotlin-wrappers:kotlin-js:2026.11.2")
         }
         jsMain {
             languageSettings.optIn("kotlin.js.ExperimentalWasmJsInterop")
